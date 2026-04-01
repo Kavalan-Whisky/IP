@@ -18,7 +18,11 @@
       --glow: 0 0 30px rgba(0, 255, 163, 0.15);
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
 
     body {
       background: var(--bg);
@@ -98,8 +102,10 @@
     }
 
     .dot {
-      width: 10px; height: 10px;
+      width: 10px; 
+      height: 10px;
       border-radius: 50%;
+      box-shadow: 0 0 8px currentColor;
     }
     .dot.red   { background: #ff5f57; }
     .dot.yellow{ background: #febc2e; }
@@ -129,22 +135,13 @@
       animation: slideIn 0.4s ease forwards;
     }
 
-    .info-item:last-child { border-bottom: none; }
-
-    .info-item:nth-child(1)  { animation-delay: 0.25s; }
-    .info-item:nth-child(2)  { animation-delay: 0.32s; }
-    .info-item:nth-child(3)  { animation-delay: 0.39s; }
-    .info-item:nth-child(4)  { animation-delay: 0.46s; }
-    .info-item:nth-child(5)  { animation-delay: 0.53s; }
-    .info-item:nth-child(6)  { animation-delay: 0.60s; }
-    .info-item:nth-child(7)  { animation-delay: 0.67s; }
-    .info-item:nth-child(8)  { animation-delay: 0.74s; }
-    .info-item:nth-child(9)  { animation-delay: 0.81s; }
-    .info-item:nth-child(10) { animation-delay: 0.88s; }
-    .info-item:nth-child(11) { animation-delay: 0.95s; }
+    .info-item:last-child { 
+      border-bottom: none; 
+    }
 
     .info-item:hover {
       background: rgba(0, 255, 163, 0.04);
+      transition: background 0.2s ease;
     }
 
     .info-label {
@@ -184,6 +181,38 @@
       border-top: 1px solid var(--border);
     }
 
+    .actions {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .copy-button {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 0.75rem 1.8rem;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--glow);
+    }
+
+    .copy-button:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 25px rgba(0, 255, 163, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .copy-button:active {
+      transform: scale(0.98);
+    }
+
     footer {
       margin-top: 1.5rem;
       text-align: center;
@@ -204,6 +233,32 @@
     }
     @keyframes slideIn {
       to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+      
+      .info-item {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        padding: 1rem 1.2rem;
+      }
+      
+      .info-label {
+        padding-top: 0;
+        font-size: 0.65rem;
+      }
+      
+      .info-value {
+        font-size: 0.8rem;
+      }
+      
+      .card-header {
+        padding: 0.9rem 1.1rem;
+      }
     }
 
     /* Scrollbar */
@@ -232,16 +287,28 @@
     </ul>
   </div>
 
-  <footer>Data is local — nothing is stored or transmitted</footer>
+  <div class="actions">
+    <button id="copy-btn" class="copy-button">📋 Copy Full Report</button>
+  </div>
+
+  <footer>Data is mostly local — IP is fetched from a public API (nothing is stored or transmitted beyond that)</footer>
 </div>
 
 <script>
   const list = document.getElementById('info-list');
 
-  function row(label, value, cls = '') {
+  function row(label, value, extraClass = '') {
     const li = document.createElement('li');
-    li.className = 'info-item' + (cls ? ' ' + cls : '');
-    li.innerHTML = `<span class="info-label">${label}</span><span class="info-value">${value}</span>`;
+    const index = list.children.length; // dynamic stagger
+    
+    li.className = `info-item ${extraClass}`.trim();
+    li.style.animationDelay = `${0.25 + index * 0.07}s`;
+    
+    li.innerHTML = `
+      <span class="info-label">${label}</span>
+      <span class="info-value">${value}</span>
+    `;
+    
     list.appendChild(li);
     return li;
   }
@@ -250,7 +317,7 @@
     return `<span class="badge">${text}</span>`;
   }
 
-  // --- Browser & Device ---
+  // --- Browser & Device detection (improved) ---
   const ua = navigator.userAgent;
 
   function getBrowser(ua) {
@@ -267,9 +334,9 @@
     if (/Windows NT 6\.3/.test(ua)) return 'Windows 8.1';
     if (/Windows NT 6\.1/.test(ua)) return 'Windows 7';
     if (/Windows/.test(ua)) return 'Windows';
-    if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g,'.');
+    if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g, '.');
     if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
-    if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g,'.');
+    if (/iPhone OS ([\d_]+)/.test(ua) || /iPad/.test(ua)) return 'iOS ' + (ua.match(/OS ([\d_]+)/)?.[1] || '').replace(/_/g, '.');
     if (/Linux/.test(ua)) return 'Linux';
     return 'Unknown OS';
   }
@@ -279,17 +346,24 @@
     if (/iPad/.test(ua)) return 'iPad';
     if (/Android/.test(ua) && /Mobile/.test(ua)) return 'Android Phone';
     if (/Android/.test(ua)) return 'Android Tablet';
-    return 'Desktop';
+    return 'Desktop / Laptop';
   }
 
   const [browserName, browserVer] = getBrowser(ua);
   const os = getOS(ua);
   const device = getDevice(ua);
 
+  // Populate static rows (IP is special)
   row('IP Address', '<span class="loading" id="ip-val">Fetching…</span>', 'ip-section');
   row('Browser', `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`);
   row('OS', os);
   row('Device', device);
+  
+  // Extra useful fingerprint data
+  row('Hardware Cores', navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} cores` : 'Unknown');
+  row('Device Memory', navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A');
+  row('Touch Support', navigator.maxTouchPoints ? `${navigator.maxTouchPoints} points` : 'None');
+
   row('Language', navigator.language || 'Unknown');
   row('Languages', (navigator.languages || [navigator.language]).join(', '));
   row('Platform', navigator.platform || 'Unknown');
@@ -302,16 +376,73 @@
   row('Online', navigator.onLine ? badge('Yes') : badge('No'));
   row('User Agent', `<span style="font-size:0.72rem;color:#9090a8">${ua}</span>`);
 
-  // Fetch public IP
-  fetch('https://api.ipify.org?format=json')
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById('ip-val').textContent = d.ip;
-      document.getElementById('ip-val').classList.remove('loading');
-    })
-    .catch(() => {
-      document.getElementById('ip-val').textContent = 'Unavailable';
+  // Fetch public IP (with better error handling)
+  async function fetchIP() {
+    const ipEl = document.getElementById('ip-val');
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      
+      const res = await fetch('https://api.ipify.org?format=json', { 
+        signal: controller.signal 
+      });
+      clearTimeout(timeout);
+      
+      if (!res.ok) throw new Error('Network error');
+      
+      const data = await res.json();
+      ipEl.textContent = data.ip;
+      ipEl.classList.remove('loading');
+    } catch (err) {
+      ipEl.textContent = err.name === 'AbortError' ? 'Request timeout' : 'Unavailable';
+      ipEl.classList.remove('loading');
+    }
+  }
+
+  fetchIP();
+
+  // Copy Full Report functionality
+  const copyBtn = document.getElementById('copy-btn');
+  
+  copyBtn.addEventListener('click', () => {
+    const items = document.querySelectorAll('.info-item');
+    let report = '=== Who Are You? — System Fingerprint Report ===\n\n';
+    
+    items.forEach(item => {
+      const label = item.querySelector('.info-label').textContent.trim();
+      const valueEl = item.querySelector('.info-value');
+      let value = valueEl.textContent.trim();
+      
+      if (valueEl.classList.contains('loading')) value = 'Fetching…';
+      
+      report += `${label.padEnd(20)}: ${value}\n`;
     });
+    
+    report += `\nGenerated: ${new Date().toLocaleString()}\n`;
+    report += 'Nothing was stored or logged. Pure client-side fingerprint.\n';
+    
+    navigator.clipboard.writeText(report).then(() => {
+      const original = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✅ COPIED TO CLIPBOARD';
+      copyBtn.style.transition = 'all 0.2s ease';
+      
+      setTimeout(() => {
+        copyBtn.innerHTML = original;
+      }, 2200);
+    }).catch(() => {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = report;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      
+      const original = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✅ COPIED (fallback)';
+      setTimeout(() => { copyBtn.innerHTML = original; }, 2000);
+    });
+  });
 </script>
 </body>
 </html>
