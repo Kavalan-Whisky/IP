@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Who Are You?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card: #111118;
+      --border: #2a2a3a;
+      --accent: #00ffa3;
+      --accent2: #7b5ea7;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --label: #00ffa3;
+      --glow: 0 0 30px rgba(0, 255, 163, 0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,163,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,163,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 620px;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      margin-top: 0.6rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: var(--glow), 0 20px 60px rgba(0,0,0,0.5);
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.9rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .dot.red   { background: #ff5f57; }
+    .dot.yellow{ background: #febc2e; }
+    .dot.green { background: #28c840; }
+
+    .card-title {
+      margin-left: auto;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .info-list {
+      list-style: none;
+    }
+
+    .info-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: start;
+      padding: 0.85rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+      opacity: 0;
+      transform: translateX(-8px);
+      animation: slideIn 0.4s ease forwards;
+    }
+
+    .info-item:last-child { border-bottom: none; }
+
+    .info-item:nth-child(1)  { animation-delay: 0.25s; }
+    .info-item:nth-child(2)  { animation-delay: 0.32s; }
+    .info-item:nth-child(3)  { animation-delay: 0.39s; }
+    .info-item:nth-child(4)  { animation-delay: 0.46s; }
+    .info-item:nth-child(5)  { animation-delay: 0.53s; }
+    .info-item:nth-child(6)  { animation-delay: 0.60s; }
+    .info-item:nth-child(7)  { animation-delay: 0.67s; }
+    .info-item:nth-child(8)  { animation-delay: 0.74s; }
+    .info-item:nth-child(9)  { animation-delay: 0.81s; }
+    .info-item:nth-child(10) { animation-delay: 0.88s; }
+    .info-item:nth-child(11) { animation-delay: 0.95s; }
+
+    .info-item:hover {
+      background: rgba(0, 255, 163, 0.04);
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      color: var(--label);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding-top: 2px;
+      white-space: nowrap;
+    }
+
+    .info-value {
+      font-size: 0.82rem;
+      color: var(--text);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    .info-value.loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .info-value .badge {
+      display: inline-block;
+      background: rgba(0,255,163,0.1);
+      border: 1px solid rgba(0,255,163,0.3);
+      color: var(--accent);
+      font-size: 0.65rem;
+      padding: 1px 8px;
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+    }
+
+    .ip-section {
+      background: rgba(0,255,163,0.03);
+      border-top: 1px solid var(--border);
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeUp 0.6s ease 1s both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1>Who<span>.</span>Are<span>.</span>You<span>?</span></h1>
+    <p>Your browser &amp; network fingerprint</p>
+  </header>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="card-title">System Report</span>
+    </div>
+
+    <ul class="info-list" id="info-list">
+      <!-- JS populated -->
+    </ul>
+  </div>
+
+  <footer>Data is local — nothing is stored or transmitted</footer>
+</div>
+
+<script>
+  const list = document.getElementById('info-list');
+
+  function row(label, value, cls = '') {
+    const li = document.createElement('li');
+    li.className = 'info-item' + (cls ? ' ' + cls : '');
+    li.innerHTML = `<span class="info-label">${label}</span><span class="info-value">${value}</span>`;
+    list.appendChild(li);
+    return li;
+  }
+
+  function badge(text) {
+    return `<span class="badge">${text}</span>`;
+  }
+
+  // --- Browser & Device ---
+  const ua = navigator.userAgent;
+
+  function getBrowser(ua) {
+    if (/Edg\//.test(ua))    return ['Edge', /Edg\/([\d.]+)/.exec(ua)?.[1]];
+    if (/OPR\//.test(ua))    return ['Opera', /OPR\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Chrome\//.test(ua)) return ['Chrome', /Chrome\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Firefox\//.test(ua))return ['Firefox', /Firefox\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Safari\//.test(ua)) return ['Safari', /Version\/([\d.]+)/.exec(ua)?.[1]];
+    return ['Unknown', null];
+  }
+
+  function getOS(ua) {
+    if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+    if (/Windows NT 6\.3/.test(ua)) return 'Windows 8.1';
+    if (/Windows NT 6\.1/.test(ua)) return 'Windows 7';
+    if (/Windows/.test(ua)) return 'Windows';
+    if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g,'.');
+    if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+    if (/iPhone OS ([\d_]+)/.test(ua)) return 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g,'.');
+    if (/Linux/.test(ua)) return 'Linux';
+    return 'Unknown OS';
+  }
+
+  function getDevice(ua) {
+    if (/iPhone/.test(ua)) return 'iPhone';
+    if (/iPad/.test(ua)) return 'iPad';
+    if (/Android/.test(ua) && /Mobile/.test(ua)) return 'Android Phone';
+    if (/Android/.test(ua)) return 'Android Tablet';
+    return 'Desktop';
+  }
+
+  const [browserName, browserVer] = getBrowser(ua);
+  const os = getOS(ua);
+  const device = getDevice(ua);
+
+  row('IP Address', '<span class="loading" id="ip-val">Fetching…</span>', 'ip-section');
+  row('Browser', `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`);
+  row('OS', os);
+  row('Device', device);
+  row('Language', navigator.language || 'Unknown');
+  row('Languages', (navigator.languages || [navigator.language]).join(', '));
+  row('Platform', navigator.platform || 'Unknown');
+  row('Screen', `${screen.width} × ${screen.height} px ${badge(window.devicePixelRatio + 'x DPR')}`);
+  row('Viewport', `${window.innerWidth} × ${window.innerHeight} px`);
+  row('Colour Depth', screen.colorDepth + '-bit');
+  row('Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
+  row('Cookies', navigator.cookieEnabled ? badge('Enabled') : badge('Disabled'));
+  row('Do Not Track', navigator.doNotTrack === '1' ? badge('On') : badge('Off'));
+  row('Online', navigator.onLine ? badge('Yes') : badge('No'));
+  row('User Agent', `<span style="font-size:0.72rem;color:#9090a8">${ua}</span>`);
+
+  // Fetch public IP
+  fetch('https://api.ipify.org?format=json')
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('ip-val').textContent = d.ip;
+      document.getElementById('ip-val').classList.remove('loading');
+    })
+    .catch(() => {
+      document.getElementById('ip-val').textContent = 'Unavailable';
+    });
+</script>
+</body>
+</html>
