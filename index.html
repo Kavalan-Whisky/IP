@@ -11,18 +11,14 @@
       --card: #111118;
       --border: #2a2a3a;
       --accent: #00ffa3;
-      --accent2: #7b5ea7;
       --text: #e8e8f0;
       --muted: #6b6b80;
       --label: #00ffa3;
+      --section-label: #4a4a62;
       --glow: 0 0 30px rgba(0, 255, 163, 0.15);
     }
 
-    *, *::before, *::after { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
@@ -37,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* Background grid */
     body::before {
       content: '';
       position: fixed;
@@ -54,7 +49,7 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 620px;
+      max-width: 660px;
     }
 
     header {
@@ -68,12 +63,9 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1;
-      color: var(--text);
     }
 
-    header h1 span {
-      color: var(--accent);
-    }
+    header h1 span { color: var(--accent); }
 
     header p {
       margin-top: 0.6rem;
@@ -101,15 +93,10 @@
       background: rgba(255,255,255,0.02);
     }
 
-    .dot {
-      width: 10px; 
-      height: 10px;
-      border-radius: 50%;
-      box-shadow: 0 0 8px currentColor;
-    }
-    .dot.red   { background: #ff5f57; }
-    .dot.yellow{ background: #febc2e; }
-    .dot.green { background: #28c840; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.red    { background: #ff5f57; box-shadow: 0 0 6px #ff5f57aa; }
+    .dot.yellow { background: #febc2e; box-shadow: 0 0 6px #febc2eaa; }
+    .dot.green  { background: #28c840; box-shadow: 0 0 6px #28c840aa; }
 
     .card-title {
       margin-left: auto;
@@ -119,13 +106,37 @@
       text-transform: uppercase;
     }
 
-    .info-list {
-      list-style: none;
+    .info-list { list-style: none; }
+
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.55rem 1.4rem 0.45rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.015);
+      opacity: 0;
+      animation: slideIn 0.4s ease forwards;
+    }
+
+    .section-divider span {
+      font-size: 0.6rem;
+      color: var(--section-label);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
     .info-item {
       display: grid;
-      grid-template-columns: 160px 1fr;
+      grid-template-columns: 170px 1fr auto;
       align-items: start;
       padding: 0.85rem 1.4rem;
       border-bottom: 1px solid var(--border);
@@ -133,23 +144,18 @@
       opacity: 0;
       transform: translateX(-8px);
       animation: slideIn 0.4s ease forwards;
-    }
-
-    .info-item:last-child { 
-      border-bottom: none; 
-    }
-
-    .info-item:hover {
-      background: rgba(0, 255, 163, 0.04);
       transition: background 0.2s ease;
     }
+
+    .info-item:last-child { border-bottom: none; }
+    .info-item:hover { background: rgba(0,255,163,0.04); }
 
     .info-label {
       font-size: 0.7rem;
       color: var(--label);
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      padding-top: 2px;
+      padding-top: 3px;
       white-space: nowrap;
     }
 
@@ -157,7 +163,7 @@
       font-size: 0.82rem;
       color: var(--text);
       word-break: break-all;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .info-value.loading {
@@ -165,63 +171,183 @@
       font-style: italic;
     }
 
-    .info-value .badge {
+    .badge {
       display: inline-block;
       background: rgba(0,255,163,0.1);
       border: 1px solid rgba(0,255,163,0.3);
       color: var(--accent);
-      font-size: 0.65rem;
+      font-size: 0.63rem;
       padding: 1px 8px;
       border-radius: 2px;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.07em;
     }
 
-    .ip-section {
-      background: rgba(0,255,163,0.03);
-      border-top: 1px solid var(--border);
+    .badge.warn {
+      background: rgba(254,188,46,0.1);
+      border-color: rgba(254,188,46,0.3);
+      color: #febc2e;
+    }
+
+    .badge.off {
+      background: rgba(255,95,87,0.08);
+      border-color: rgba(255,95,87,0.25);
+      color: #ff5f57;
+    }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.63rem;
+      padding: 2px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: all 0.2s;
+      white-space: nowrap;
+      align-self: center;
+    }
+
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Battery bar */
+    .bat-bar-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      vertical-align: middle;
+    }
+
+    .bat-bar {
+      display: inline-block;
+      width: 36px;
+      height: 10px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bat-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      transition: width 0.5s ease, background 0.5s ease;
     }
 
     .actions {
-      margin-top: 1.5rem;
-      text-align: center;
+      margin-top: 1.4rem;
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease 0.9s both;
+      opacity: 0;
     }
 
-    .copy-button {
+    .btn {
       background: transparent;
       color: var(--accent);
       border: 1px solid var(--accent);
-      padding: 0.75rem 1.8rem;
+      padding: 0.7rem 1.6rem;
       border-radius: 4px;
       font-family: inherit;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
       box-shadow: var(--glow);
     }
 
-    .copy-button:hover {
+    .btn:hover {
       background: var(--accent);
       color: var(--bg);
-      box-shadow: 0 0 25px rgba(0, 255, 163, 0.5);
+      box-shadow: 0 0 28px rgba(0,255,163,0.45);
       transform: translateY(-1px);
     }
 
-    .copy-button:active {
-      transform: scale(0.98);
+    .btn:active { transform: scale(0.98); }
+
+    .btn.secondary {
+      color: var(--muted);
+      border-color: var(--border);
+      box-shadow: none;
+    }
+
+    .btn.secondary:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
+    /* Fallback modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 540px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+
+    .modal h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      margin-bottom: 0.9rem;
+      color: var(--accent);
+    }
+
+    .modal textarea {
+      width: 100%;
+      height: 220px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.8rem;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      margin-top: 0.8rem;
+      display: flex;
+      gap: 0.6rem;
+      justify-content: flex-end;
     }
 
     footer {
-      margin-top: 1.5rem;
+      margin-top: 1.4rem;
       text-align: center;
-      font-size: 0.65rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
+      font-size: 0.62rem;
+      color: var(--section-label);
+      letter-spacing: 0.07em;
       text-transform: uppercase;
-      animation: fadeUp 0.6s ease 1s both;
+      line-height: 1.9;
+      animation: fadeUp 0.6s ease 1.1s both;
+      opacity: 0;
     }
+
+    #viewport-val { transition: color 0.25s; }
+    #viewport-val.flash { color: var(--accent); }
 
     @keyframes fadeDown {
       from { opacity: 0; transform: translateY(-12px); }
@@ -235,39 +361,24 @@
       to { opacity: 1; transform: translateX(0); }
     }
 
-    /* Mobile responsiveness */
     @media (max-width: 480px) {
-      body {
-        padding: 1.5rem 1rem;
-      }
-      
+      body { padding: 1.2rem 1rem; }
       .info-item {
         grid-template-columns: 1fr;
-        gap: 0.4rem;
-        padding: 1rem 1.2rem;
-      }
-      
-      .info-label {
-        padding-top: 0;
-        font-size: 0.65rem;
-      }
-      
-      .info-value {
-        font-size: 0.8rem;
-      }
-      
-      .card-header {
+        gap: 0.35rem;
         padding: 0.9rem 1.1rem;
       }
+      .info-item > .refresh-btn { justify-self: start; }
+      .section-divider { padding: 0.5rem 1.1rem 0.4rem; }
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   </style>
 </head>
 <body>
+
 <div class="wrapper">
   <header>
     <h1>Who<span>.</span>Are<span>.</span>You<span>?</span></h1>
@@ -281,167 +392,334 @@
       <span class="dot green"></span>
       <span class="card-title">System Report</span>
     </div>
-
-    <ul class="info-list" id="info-list">
-      <!-- JS populated -->
-    </ul>
+    <ul class="info-list" id="info-list"></ul>
   </div>
 
   <div class="actions">
-    <button id="copy-btn" class="copy-button">📋 Copy Full Report</button>
+    <button id="copy-btn" class="btn">📋 Copy Report</button>
+    <button id="refresh-ip-btn" class="btn secondary">↻ Refresh IP</button>
   </div>
 
-  <footer>Data is mostly local — IP is fetched from a public API (nothing is stored or transmitted beyond that)</footer>
+  <footer>
+    Most data is read locally from your browser — nothing is stored or logged.<br>
+    IP &amp; location are fetched from ipwho.is for display only and not retained.
+  </footer>
+</div>
+
+<!-- Clipboard fallback modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2>📋 Copy this report manually</h2>
+    <textarea id="modal-text" readonly></textarea>
+    <div class="modal-actions">
+      <button class="btn secondary" id="modal-close">Close</button>
+      <button class="btn" id="modal-select">Select All</button>
+    </div>
+  </div>
 </div>
 
 <script>
   const list = document.getElementById('info-list');
+  let animIdx = 0;
 
-  function row(label, value, extraClass = '') {
+  function section(label) {
     const li = document.createElement('li');
-    const index = list.children.length; // dynamic stagger
-    
-    li.className = `info-item ${extraClass}`.trim();
-    li.style.animationDelay = `${0.25 + index * 0.07}s`;
-    
+    li.className = 'section-divider';
+    li.style.animationDelay = `${0.2 + animIdx * 0.055}s`;
+    li.innerHTML = `<span>${label}</span>`;
+    list.appendChild(li);
+    animIdx++;
+  }
+
+  function row(label, html, id = null, withRefresh = false) {
+    const li = document.createElement('li');
+    li.className = 'info-item';
+    li.style.animationDelay = `${0.2 + animIdx * 0.055}s`;
     li.innerHTML = `
       <span class="info-label">${label}</span>
-      <span class="info-value">${value}</span>
+      <span class="info-value${id && (id === 'ip-val' || id === 'geo-val' || id === 'isp-val') ? ' loading' : ''}"
+            ${id ? `id="${id}"` : ''}>${html}</span>
+      ${withRefresh ? `<button class="refresh-btn" id="row-refresh-btn">↻</button>` : `<span></span>`}
     `;
-    
     list.appendChild(li);
+    animIdx++;
     return li;
   }
 
-  function badge(text) {
-    return `<span class="badge">${text}</span>`;
+  function badge(text, type = '') {
+    return `<span class="badge ${type}".trim()>${text}</span>`;
   }
 
-  // --- Browser & Device detection (improved) ---
+  // ── Detection ──────────────────────────────────────────────
   const ua = navigator.userAgent;
 
-  function getBrowser(ua) {
-    if (/Edg\//.test(ua))    return ['Edge', /Edg\/([\d.]+)/.exec(ua)?.[1]];
-    if (/OPR\//.test(ua))    return ['Opera', /OPR\/([\d.]+)/.exec(ua)?.[1]];
-    if (/Chrome\//.test(ua)) return ['Chrome', /Chrome\/([\d.]+)/.exec(ua)?.[1]];
-    if (/Firefox\//.test(ua))return ['Firefox', /Firefox\/([\d.]+)/.exec(ua)?.[1]];
-    if (/Safari\//.test(ua)) return ['Safari', /Version\/([\d.]+)/.exec(ua)?.[1]];
+  const getBrowser = ua => {
+    if (/Edg\//.test(ua))     return ['Edge',    /Edg\/([\d.]+)/.exec(ua)?.[1]];
+    if (/OPR\//.test(ua))     return ['Opera',   /OPR\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Chrome\//.test(ua))  return ['Chrome',  /Chrome\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Firefox\//.test(ua)) return ['Firefox', /Firefox\/([\d.]+)/.exec(ua)?.[1]];
+    if (/Safari\//.test(ua))  return ['Safari',  /Version\/([\d.]+)/.exec(ua)?.[1]];
     return ['Unknown', null];
-  }
+  };
 
-  function getOS(ua) {
-    if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
-    if (/Windows NT 6\.3/.test(ua)) return 'Windows 8.1';
-    if (/Windows NT 6\.1/.test(ua)) return 'Windows 7';
-    if (/Windows/.test(ua)) return 'Windows';
+  const getOS = ua => {
+    if (/Windows NT 10/.test(ua))     return 'Windows 10 / 11';
+    if (/Windows NT 6\.3/.test(ua))   return 'Windows 8.1';
+    if (/Windows NT 6\.1/.test(ua))   return 'Windows 7';
+    if (/Windows/.test(ua))           return 'Windows';
     if (/Mac OS X ([\d_]+)/.test(ua)) return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g, '.');
-    if (/Android ([\d.]+)/.test(ua)) return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
-    if (/iPhone OS ([\d_]+)/.test(ua) || /iPad/.test(ua)) return 'iOS ' + (ua.match(/OS ([\d_]+)/)?.[1] || '').replace(/_/g, '.');
-    if (/Linux/.test(ua)) return 'Linux';
-    return 'Unknown OS';
-  }
+    if (/Android ([\d.]+)/.test(ua))  return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
+    if (/iPhone|iPad/.test(ua))       return 'iOS ' + (ua.match(/OS ([\d_]+)/)?.[1] || '').replace(/_/g, '.');
+    if (/Linux/.test(ua))             return 'Linux';
+    return 'Unknown';
+  };
 
-  function getDevice(ua) {
-    if (/iPhone/.test(ua)) return 'iPhone';
-    if (/iPad/.test(ua)) return 'iPad';
+  const getDevice = ua => {
+    if (/iPhone/.test(ua))                       return 'iPhone';
+    if (/iPad/.test(ua))                         return 'iPad';
     if (/Android/.test(ua) && /Mobile/.test(ua)) return 'Android Phone';
-    if (/Android/.test(ua)) return 'Android Tablet';
+    if (/Android/.test(ua))                      return 'Android Tablet';
     return 'Desktop / Laptop';
-  }
+  };
+
+  const getGPU = () => {
+    try {
+      const gl = document.createElement('canvas').getContext('webgl');
+      if (!gl) return null;
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : null;
+    } catch { return null; }
+  };
 
   const [browserName, browserVer] = getBrowser(ua);
-  const os = getOS(ua);
-  const device = getDevice(ua);
+  const gpu = getGPU();
 
-  // Populate static rows (IP is special)
-  row('IP Address', '<span class="loading" id="ip-val">Fetching…</span>', 'ip-section');
-  row('Browser', `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`);
-  row('OS', os);
-  row('Device', device);
-  
-  // Extra useful fingerprint data
-  row('Hardware Cores', navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} cores` : 'Unknown');
-  row('Device Memory', navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A');
-  row('Touch Support', navigator.maxTouchPoints ? `${navigator.maxTouchPoints} points` : 'None');
+  // Modern platform API with fallback
+  const platformStr = navigator.userAgentData?.platform || navigator.platform || 'Unknown';
 
-  row('Language', navigator.language || 'Unknown');
-  row('Languages', (navigator.languages || [navigator.language]).join(', '));
-  row('Platform', navigator.platform || 'Unknown');
-  row('Screen', `${screen.width} × ${screen.height} px ${badge(window.devicePixelRatio + 'x DPR')}`);
-  row('Viewport', `${window.innerWidth} × ${window.innerHeight} px`);
-  row('Colour Depth', screen.colorDepth + '-bit');
-  row('Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
-  row('Cookies', navigator.cookieEnabled ? badge('Enabled') : badge('Disabled'));
+  // ── Populate rows ──────────────────────────────────────────
+
+  // Network
+  section('Network');
+  row('IP Address', 'Fetching…', 'ip-val', true);
+  row('Location',   'Fetching…', 'geo-val');
+  row('ISP / Org',  'Fetching…', 'isp-val');
+
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (conn) {
+    row('Connection',  `<span id="conn-val">${conn.effectiveType?.toUpperCase() || '—'} ${conn.downlink != null ? badge(conn.downlink + ' Mbps') : ''}</span>`);
+    row('Round-trip',  `<span id="rtt-val">${conn.rtt != null ? conn.rtt + ' ms' : 'N/A'}</span>`);
+    row('Save Data',    conn.saveData ? badge('On', 'warn') : badge('Off'));
+    conn.addEventListener('change', () => {
+      const c = document.getElementById('conn-val');
+      const r = document.getElementById('rtt-val');
+      if (c) c.innerHTML = `${conn.effectiveType?.toUpperCase() || '—'} ${conn.downlink != null ? badge(conn.downlink + ' Mbps') : ''}`;
+      if (r) r.textContent = conn.rtt != null ? conn.rtt + ' ms' : 'N/A';
+    });
+  }
+
+  // Browser
+  section('Browser');
+  row('Browser',      `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`);
+  row('OS',           getOS(ua));
+  row('Device',       getDevice(ua));
+  row('Platform',     platformStr);
+  row('Language',     navigator.language || 'Unknown');
+  row('Languages',    (navigator.languages || [navigator.language]).join(', '));
+  row('Cookies',      navigator.cookieEnabled ? badge('Enabled') : badge('Disabled', 'off'));
   row('Do Not Track', navigator.doNotTrack === '1' ? badge('On') : badge('Off'));
-  row('Online', navigator.onLine ? badge('Yes') : badge('No'));
-  row('User Agent', `<span style="font-size:0.72rem;color:#9090a8">${ua}</span>`);
+  row('Online',       navigator.onLine ? badge('Yes') : badge('No', 'warn'));
 
-  // Fetch public IP (with better error handling)
-  async function fetchIP() {
-    const ipEl = document.getElementById('ip-val');
+  // Hardware
+  section('Hardware');
+  row('CPU Cores',     navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} logical cores` : 'Unknown');
+  row('Device Memory', navigator.deviceMemory        ? `≈ ${navigator.deviceMemory} GB` : 'N/A');
+  row('Touch Points',  navigator.maxTouchPoints > 0  ? `${navigator.maxTouchPoints} points` : badge('None'));
+  row('GPU',           gpu || `<span style="color:var(--muted);font-style:italic">Not exposed / blocked</span>`);
+  row('Battery',       '<span class="loading" id="bat-val">Checking…</span>');
+
+  // Display
+  section('Display');
+  row('Screen',      `${screen.width} × ${screen.height} px &nbsp;${badge(window.devicePixelRatio + 'x DPR')}`);
+  row('Viewport',    `<span id="viewport-val">${window.innerWidth} × ${window.innerHeight} px</span> <span style="font-size:0.63rem;color:var(--muted)">(live)</span>`);
+  row('Colour Depth', screen.colorDepth + '-bit');
+  row('Orientation',  screen.orientation?.type || 'N/A');
+
+  // System
+  section('System');
+  row('Timezone',   Intl.DateTimeFormat().resolvedOptions().timeZone);
+  row('User Agent', `<span style="font-size:0.7rem;color:#9090a8;line-height:1.65">${ua}</span>`);
+
+  // ── Live viewport update ───────────────────────────────────
+  const vpEl = document.getElementById('viewport-val');
+  let vpTimer;
+  window.addEventListener('resize', () => {
+    vpEl.textContent = `${window.innerWidth} × ${window.innerHeight} px`;
+    vpEl.classList.add('flash');
+    clearTimeout(vpTimer);
+    vpTimer = setTimeout(() => vpEl.classList.remove('flash'), 600);
+  });
+
+  // ── Battery ───────────────────────────────────────────────
+  const batEl = document.getElementById('bat-val');
+  if (navigator.getBattery) {
+    navigator.getBattery().then(b => {
+      function renderBat(bat) {
+        const pct = Math.round(bat.level * 100);
+        const color = pct < 20 ? '#ff5f57' : pct < 50 ? '#febc2e' : '#00ffa3';
+        batEl.classList.remove('loading');
+        batEl.innerHTML = `
+          ${pct}%&nbsp;${bat.charging ? badge('⚡ Charging') : ''}
+          <span class="bat-bar-wrap">
+            <span class="bat-bar">
+              <span class="bat-fill" style="width:${pct}%;background:${color}"></span>
+            </span>
+          </span>`;
+      }
+      renderBat(b);
+      b.addEventListener('levelchange',    () => renderBat(b));
+      b.addEventListener('chargingchange', () => renderBat(b));
+    }).catch(() => {
+      batEl.textContent = 'N/A';
+      batEl.classList.remove('loading');
+    });
+  } else {
+    batEl.textContent = 'Not supported';
+    batEl.classList.remove('loading');
+  }
+
+  // ── IP + Geolocation ──────────────────────────────────────
+  const ipEl  = document.getElementById('ip-val');
+  const geoEl = document.getElementById('geo-val');
+  const ispEl = document.getElementById('isp-val');
+
+  // Normalise different API response shapes into one object
+  function normalise(data) {
+    if (!data) return null;
+    const ip      = data.ip      || data.query            || null;
+    const city    = data.city                              || '';
+    const region  = data.region  || data.region_name      || '';
+    const country = data.country || data.country_name     || '';
+    const cc      = data.country_code || data.country_code2
+                 || data.countryCode  || '';
+    const isp     = data.org     || data.isp
+                 || data.connection?.org
+                 || data.as       || '';
+    return ip ? { ip, city, region, country, cc, isp } : null;
+  }
+
+  async function tryFetch(url, timeout = 5000) {
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), timeout);
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 6000);
-      
-      const res = await fetch('https://api.ipify.org?format=json', { 
-        signal: controller.signal 
-      });
-      clearTimeout(timeout);
-      
-      if (!res.ok) throw new Error('Network error');
-      
-      const data = await res.json();
-      ipEl.textContent = data.ip;
-      ipEl.classList.remove('loading');
-    } catch (err) {
-      ipEl.textContent = err.name === 'AbortError' ? 'Request timeout' : 'Unavailable';
-      ipEl.classList.remove('loading');
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      clearTimeout(tid);
+      return null;
     }
   }
 
-  fetchIP();
+  async function fetchIPData() {
+    [ipEl, geoEl, ispEl].forEach(el => {
+      if (el) { el.textContent = 'Fetching…'; el.className = 'info-value loading'; }
+    });
 
-  // Copy Full Report functionality
-  const copyBtn = document.getElementById('copy-btn');
-  
-  copyBtn.addEventListener('click', () => {
-    const items = document.querySelectorAll('.info-item');
-    let report = '=== Who Are You? — System Fingerprint Report ===\n\n';
-    
-    items.forEach(item => {
-      const label = item.querySelector('.info-label').textContent.trim();
-      const valueEl = item.querySelector('.info-value');
-      let value = valueEl.textContent.trim();
-      
-      if (valueEl.classList.contains('loading')) value = 'Fetching…';
-      
-      report += `${label.padEnd(20)}: ${value}\n`;
+    // Full geo endpoints (tried in order, first success wins)
+    const geoEndpoints = [
+      'https://ipwho.is/',
+      'https://ipapi.co/json/',
+      'https://ipinfo.io/json',
+      'https://freeipapi.com/api/json',
+    ];
+
+    let info = null;
+    for (const url of geoEndpoints) {
+      const raw = await tryFetch(url);
+      info = normalise(raw);
+      if (info) break;
+    }
+
+    // Last resort: get at least the raw IP from ipify
+    if (!info) {
+      const raw = await tryFetch('https://api.ipify.org?format=json');
+      if (raw?.ip) {
+        info = { ip: raw.ip, city: '', region: '', country: '', cc: '', isp: '' };
+      }
+    }
+
+    if (!info) {
+      ipEl.textContent = 'Unavailable';
+      ipEl.className   = 'info-value';
+      [geoEl, ispEl].forEach(el => { if (el) { el.textContent = '—'; el.className = 'info-value'; } });
+      return;
+    }
+
+    const flag = info.cc.length === 2
+      ? String.fromCodePoint(...[...info.cc.toUpperCase()].map(c => 0x1F1E0 + c.charCodeAt(0) - 65))
+      : '';
+
+    ipEl.textContent = info.ip;
+    ipEl.className   = 'info-value';
+
+    const locParts = [info.city, info.region, info.country].filter(Boolean);
+    geoEl.innerHTML  = `${flag ? flag + '\u2002' : ''}${locParts.length ? locParts.join(', ') : '—'}`;
+    geoEl.className  = 'info-value';
+
+    ispEl.textContent = info.isp || '—';
+    ispEl.className   = 'info-value';
+  }
+
+  fetchIPData();
+
+  document.getElementById('refresh-ip-btn').addEventListener('click', fetchIPData);
+  document.getElementById('row-refresh-btn')?.addEventListener('click', fetchIPData);
+
+  // ── Copy Report ───────────────────────────────────────────
+  function buildReport() {
+    let out = '=== Who Are You? — System Fingerprint ===\n';
+    document.querySelectorAll('.section-divider, .info-item').forEach(el => {
+      if (el.classList.contains('section-divider')) {
+        out += `\n── ${el.querySelector('span').textContent.trim()} ──\n`;
+      } else {
+        const label = el.querySelector('.info-label').textContent.trim();
+        const value = el.querySelector('.info-value').textContent.trim().replace(/\s+/g, ' ');
+        out += `${label.padEnd(22)}: ${value}\n`;
+      }
     });
-    
-    report += `\nGenerated: ${new Date().toLocaleString()}\n`;
-    report += 'Nothing was stored or logged. Pure client-side fingerprint.\n';
-    
-    navigator.clipboard.writeText(report).then(() => {
-      const original = copyBtn.innerHTML;
-      copyBtn.innerHTML = '✅ COPIED TO CLIPBOARD';
-      copyBtn.style.transition = 'all 0.2s ease';
-      
-      setTimeout(() => {
-        copyBtn.innerHTML = original;
-      }, 2200);
-    }).catch(() => {
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = report;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      
-      const original = copyBtn.innerHTML;
-      copyBtn.innerHTML = '✅ COPIED (fallback)';
-      setTimeout(() => { copyBtn.innerHTML = original; }, 2000);
-    });
+    out += `\nGenerated : ${new Date().toLocaleString()}\n`;
+    out += 'Note      : Local data only — IP via ipwho.is, nothing stored.\n';
+    return out;
+  }
+
+  document.getElementById('copy-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('copy-btn');
+    const report = buildReport();
+    try {
+      await navigator.clipboard.writeText(report);
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
+      setTimeout(() => btn.innerHTML = orig, 2200);
+    } catch {
+      // Clipboard API unavailable — show modal fallback
+      document.getElementById('modal-text').value = report;
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+  });
+
+  document.getElementById('modal-close').addEventListener('click',
+    () => document.getElementById('modal-overlay').classList.remove('open'));
+
+  document.getElementById('modal-select').addEventListener('click', () => {
+    const ta = document.getElementById('modal-text');
+    ta.select(); ta.setSelectionRange(0, 99999);
+  });
+
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target.id === 'modal-overlay')
+      document.getElementById('modal-overlay').classList.remove('open');
   });
 </script>
 </body>
