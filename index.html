@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Who Are You?</title>
+  <title>Who The Hell Are You?</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -31,6 +31,7 @@
       justify-content: center;
       padding: 2rem;
       overflow-x: hidden;
+      position: relative;
     }
 
     body::before {
@@ -43,6 +44,12 @@
       background-size: 40px 40px;
       pointer-events: none;
       z-index: 0;
+      animation: gridShift 30s linear infinite;
+    }
+
+    @keyframes gridShift {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 40px; }
     }
 
     .wrapper {
@@ -55,24 +62,29 @@
     header {
       margin-bottom: 2rem;
       animation: fadeDown 0.6s ease both;
+      text-align: center;
     }
 
     header h1 {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-size: clamp(2.2rem, 7vw, 3.4rem);
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       line-height: 1;
     }
 
-    header h1 span { color: var(--accent); }
+    header h1 span { color: var(--accent); animation: neonFlicker 1.5s infinite alternate; }
 
     header p {
       margin-top: 0.6rem;
       color: var(--muted);
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .card {
@@ -93,17 +105,30 @@
       background: rgba(255,255,255,0.02);
     }
 
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot { 
+      width: 10px; 
+      height: 10px; 
+      border-radius: 50%; 
+      animation: dotPulse 2s infinite;
+    }
     .dot.red    { background: #ff5f57; box-shadow: 0 0 6px #ff5f57aa; }
-    .dot.yellow { background: #febc2e; box-shadow: 0 0 6px #febc2eaa; }
-    .dot.green  { background: #28c840; box-shadow: 0 0 6px #28c840aa; }
+    .dot.yellow { background: #febc2e; box-shadow: 0 0 6px #febc2eaa; animation-delay: 0.3s; }
+    .dot.green  { background: #28c840; box-shadow: 0 0 6px #28c840aa; animation-delay: 0.6s; }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
 
     .card-title {
       margin-left: auto;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .info-list { list-style: none; }
@@ -120,9 +145,9 @@
     }
 
     .section-divider span {
-      font-size: 0.6rem;
+      font-size: 0.65rem;
       color: var(--section-label);
-      letter-spacing: 0.2em;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -148,22 +173,22 @@
     }
 
     .info-item:last-child { border-bottom: none; }
-    .info-item:hover { background: rgba(0,255,163,0.04); }
+    .info-item:hover { background: rgba(0,255,163,0.05); }
 
     .info-label {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--label);
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       padding-top: 3px;
       white-space: nowrap;
     }
 
     .info-value {
-      font-size: 0.82rem;
+      font-size: 0.83rem;
       color: var(--text);
       word-break: break-all;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
     .info-value.loading {
@@ -171,15 +196,26 @@
       font-style: italic;
     }
 
+    .witty-comment {
+      display: block;
+      font-size: 0.64rem;
+      color: #9a9ab0;
+      font-style: italic;
+      margin-top: 4px;
+      line-height: 1.35;
+      opacity: 0.85;
+    }
+
     .badge {
       display: inline-block;
       background: rgba(0,255,163,0.1);
       border: 1px solid rgba(0,255,163,0.3);
       color: var(--accent);
-      font-size: 0.63rem;
+      font-size: 0.65rem;
       padding: 1px 8px;
       border-radius: 2px;
       letter-spacing: 0.07em;
+      vertical-align: middle;
     }
 
     .badge.warn {
@@ -199,7 +235,7 @@
       border: 1px solid var(--border);
       color: var(--muted);
       font-family: inherit;
-      font-size: 0.63rem;
+      font-size: 0.65rem;
       padding: 2px 8px;
       border-radius: 2px;
       cursor: pointer;
@@ -209,7 +245,11 @@
       align-self: center;
     }
 
-    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .refresh-btn:hover { 
+      border-color: var(--accent); 
+      color: var(--accent); 
+      transform: rotate(180deg);
+    }
 
     /* Battery bar */
     .bat-bar-wrap {
@@ -221,8 +261,8 @@
 
     .bat-bar {
       display: inline-block;
-      width: 36px;
-      height: 10px;
+      width: 42px;
+      height: 11px;
       border: 1px solid var(--border);
       border-radius: 2px;
       position: relative;
@@ -232,13 +272,13 @@
     .bat-fill {
       position: absolute;
       left: 0; top: 0; bottom: 0;
-      transition: width 0.5s ease, background 0.5s ease;
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.4s ease;
     }
 
     .actions {
-      margin-top: 1.4rem;
+      margin-top: 1.6rem;
       display: flex;
-      gap: 0.8rem;
+      gap: 0.9rem;
       justify-content: center;
       flex-wrap: wrap;
       animation: fadeUp 0.6s ease 0.9s both;
@@ -249,12 +289,12 @@
       background: transparent;
       color: var(--accent);
       border: 1px solid var(--accent);
-      padding: 0.7rem 1.6rem;
+      padding: 0.75rem 1.8rem;
       border-radius: 4px;
       font-family: inherit;
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       font-weight: 700;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -264,11 +304,11 @@
     .btn:hover {
       background: var(--accent);
       color: var(--bg);
-      box-shadow: 0 0 28px rgba(0,255,163,0.45);
-      transform: translateY(-1px);
+      box-shadow: 0 0 32px rgba(0,255,163,0.5);
+      transform: translateY(-2px);
     }
 
-    .btn:active { transform: scale(0.98); }
+    .btn:active { transform: scale(0.95); }
 
     .btn.secondary {
       color: var(--muted);
@@ -277,21 +317,22 @@
     }
 
     .btn.secondary:hover {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.06);
       color: var(--text);
       border-color: var(--muted);
     }
 
-    /* Fallback modal */
+    /* Modals */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.85);
       z-index: 100;
       align-items: center;
       justify-content: center;
       padding: 2rem;
+      animation: fadeInModal 0.3s ease;
     }
 
     .modal-overlay.open { display: flex; }
@@ -300,73 +341,86 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 4px;
-      padding: 1.5rem;
+      padding: 1.8rem;
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+      animation: modalPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
 
     .modal h2 {
       font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      margin-bottom: 0.9rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
       color: var(--accent);
     }
 
     .modal textarea {
       width: 100%;
-      height: 220px;
+      height: 260px;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 2px;
       color: var(--text);
       font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.8rem;
+      font-size: 0.72rem;
+      padding: 1rem;
       resize: vertical;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .modal-actions {
-      margin-top: 0.8rem;
+      margin-top: 1rem;
       display: flex;
-      gap: 0.6rem;
+      gap: 0.8rem;
       justify-content: flex-end;
     }
 
     footer {
-      margin-top: 1.4rem;
+      margin-top: 2rem;
       text-align: center;
-      font-size: 0.62rem;
+      font-size: 0.64rem;
       color: var(--section-label);
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      line-height: 1.9;
-      animation: fadeUp 0.6s ease 1.1s both;
+      line-height: 1.8;
+      animation: fadeUp 0.6s ease 1.2s both;
       opacity: 0;
     }
 
-    #viewport-val { transition: color 0.25s; }
-    #viewport-val.flash { color: var(--accent); }
+    #viewport-val { transition: color 0.3s ease; }
+    #viewport-val.flash { color: var(--accent); animation: neonFlicker 0.8s; }
 
     @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-12px); }
+      from { opacity: 0; transform: translateY(-20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
+      from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes slideIn {
       to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes neonFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes modalPop {
+      0% { transform: scale(0.95); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     @media (max-width: 480px) {
       body { padding: 1.2rem 1rem; }
       .info-item {
         grid-template-columns: 1fr;
-        gap: 0.35rem;
-        padding: 0.9rem 1.1rem;
+        gap: 0.4rem;
+        padding: 0.95rem 1.1rem;
       }
       .info-item > .refresh-btn { justify-self: start; }
       .section-divider { padding: 0.5rem 1.1rem 0.4rem; }
@@ -374,15 +428,15 @@
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--accent); opacity: 0.3; border-radius: 2px; }
   </style>
 </head>
 <body>
 
 <div class="wrapper">
   <header>
-    <h1>Who<span>.</span>Are<span>.</span>You<span>?</span></h1>
-    <p>Your browser &amp; network fingerprint</p>
+    <h1>Who<span>.</span>The<span>.</span>Hell<span>?</span></h1>
+    <p>🔥 Your browser &amp; network fingerprint — because privacy died in 2016 😂</p>
   </header>
 
   <div class="card">
@@ -390,30 +444,43 @@
       <span class="dot red"></span>
       <span class="dot yellow"></span>
       <span class="dot green"></span>
-      <span class="card-title">System Report</span>
+      <span class="card-title">SYSTEM REPORT <span style="font-size:1.1em;">🤡</span></span>
     </div>
     <ul class="info-list" id="info-list"></ul>
   </div>
 
   <div class="actions">
-    <button id="copy-btn" class="btn">📋 Copy Report</button>
-    <button id="refresh-ip-btn" class="btn secondary">↻ Refresh IP</button>
+    <button id="copy-btn" class="btn">📋 Copy This Mess</button>
+    <button id="refresh-ip-btn" class="btn secondary">↻ Refresh IP (again)</button>
+    <button id="roast-btn" class="btn secondary">🔥 GET ROASTED</button>
   </div>
 
   <footer>
-    Most data is read locally from your browser — nothing is stored or logged.<br>
-    IP &amp; location are fetched from ipwho.is for display only and not retained.
+    99% of this data is stolen locally from your browser. Nothing stored.<br>
+    The other 1% is your IP judging you from ipwho.is. You're welcome.
   </footer>
 </div>
 
-<!-- Clipboard fallback modal -->
+<!-- Copy modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
-    <h2>📋 Copy this report manually</h2>
+    <h2>📋 Manual copy because your browser hates fun</h2>
     <textarea id="modal-text" readonly></textarea>
     <div class="modal-actions">
       <button class="btn secondary" id="modal-close">Close</button>
-      <button class="btn" id="modal-select">Select All</button>
+      <button class="btn" id="modal-select">Select All &amp; Cry</button>
+    </div>
+  </div>
+</div>
+
+<!-- Roast modal -->
+<div class="modal-overlay" id="roast-modal">
+  <div class="modal">
+    <h2>🔥 Fly's Official Roast Session</h2>
+    <div id="roast-content" style="line-height:1.7; font-size:0.85rem; color:var(--text); max-height:380px; overflow-y:auto; padding-right:10px;"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="roast-close">I'm done being bullied</button>
+      <button class="btn" id="roast-again">Roast me harder</button>
     </div>
   </div>
 </div>
@@ -425,21 +492,22 @@
   function section(label) {
     const li = document.createElement('li');
     li.className = 'section-divider';
-    li.style.animationDelay = `${0.2 + animIdx * 0.055}s`;
+    li.style.animationDelay = `${0.15 + animIdx * 0.06}s`;
     li.innerHTML = `<span>${label}</span>`;
     list.appendChild(li);
     animIdx++;
   }
 
-  function row(label, html, id = null, withRefresh = false) {
+  function row(label, html, id = null, withRefresh = false, witty = '') {
     const li = document.createElement('li');
     li.className = 'info-item';
-    li.style.animationDelay = `${0.2 + animIdx * 0.055}s`;
+    li.style.animationDelay = `${0.15 + animIdx * 0.06}s`;
+    const wittyHTML = witty ? `<span class="witty-comment">${witty}</span>` : '';
     li.innerHTML = `
       <span class="info-label">${label}</span>
       <span class="info-value${id && (id === 'ip-val' || id === 'geo-val' || id === 'isp-val') ? ' loading' : ''}"
-            ${id ? `id="${id}"` : ''}>${html}</span>
-      ${withRefresh ? `<button class="refresh-btn" id="row-refresh-btn">↻</button>` : `<span></span>`}
+            ${id ? `id="${id}"` : ''}>${html}${wittyHTML}</span>
+      ${withRefresh ? `<button class="refresh-btn" id="row-refresh-btn" title="Refresh just because you can">↻</button>` : `<span></span>`}
     `;
     list.appendChild(li);
     animIdx++;
@@ -447,10 +515,10 @@
   }
 
   function badge(text, type = '') {
-    return `<span class="badge ${type}".trim()>${text}</span>`;
+    return `<span class="badge ${type}">${text}</span>`;
   }
 
-  // ── Detection ──────────────────────────────────────────────
+  // ── Core detections ──────────────────────────────────────────────
   const ua = navigator.userAgent;
 
   const getBrowser = ua => {
@@ -459,11 +527,11 @@
     if (/Chrome\//.test(ua))  return ['Chrome',  /Chrome\/([\d.]+)/.exec(ua)?.[1]];
     if (/Firefox\//.test(ua)) return ['Firefox', /Firefox\/([\d.]+)/.exec(ua)?.[1]];
     if (/Safari\//.test(ua))  return ['Safari',  /Version\/([\d.]+)/.exec(ua)?.[1]];
-    return ['Unknown', null];
+    return ['Unknown Browser', null];
   };
 
   const getOS = ua => {
-    if (/Windows NT 10/.test(ua))     return 'Windows 10 / 11';
+    if (/Windows NT 10/.test(ua))     return 'Windows 10/11';
     if (/Windows NT 6\.3/.test(ua))   return 'Windows 8.1';
     if (/Windows NT 6\.1/.test(ua))   return 'Windows 7';
     if (/Windows/.test(ua))           return 'Windows';
@@ -471,7 +539,7 @@
     if (/Android ([\d.]+)/.test(ua))  return 'Android ' + ua.match(/Android ([\d.]+)/)[1];
     if (/iPhone|iPad/.test(ua))       return 'iOS ' + (ua.match(/OS ([\d_]+)/)?.[1] || '').replace(/_/g, '.');
     if (/Linux/.test(ua))             return 'Linux';
-    return 'Unknown';
+    return 'Unknown OS';
   };
 
   const getDevice = ua => {
@@ -493,23 +561,21 @@
 
   const [browserName, browserVer] = getBrowser(ua);
   const gpu = getGPU();
-
-  // Modern platform API with fallback
   const platformStr = navigator.userAgentData?.platform || navigator.platform || 'Unknown';
 
-  // ── Populate rows ──────────────────────────────────────────
+  // ── Populate with MAXIMUM sarcasm ──────────────────────────────────────────
 
   // Network
   section('Network');
-  row('IP Address', 'Fetching…', 'ip-val', true);
-  row('Location',   'Fetching…', 'geo-val');
-  row('ISP / Org',  'Fetching…', 'isp-val');
+  row('IP Address', 'Summoning the FBI…', 'ip-val', true, 'Your digital address. VPN users: we still see you 👀');
+  row('Location',   'Fetching…', 'geo-val', false, 'Where your IP says you are (spoilers: not as cool as you think)');
+  row('ISP / Org',  'Fetching…', 'isp-val', false, 'Your internet sugar daddy');
 
   const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (conn) {
-    row('Connection',  `<span id="conn-val">${conn.effectiveType?.toUpperCase() || '—'} ${conn.downlink != null ? badge(conn.downlink + ' Mbps') : ''}</span>`);
-    row('Round-trip',  `<span id="rtt-val">${conn.rtt != null ? conn.rtt + ' ms' : 'N/A'}</span>`);
-    row('Save Data',    conn.saveData ? badge('On', 'warn') : badge('Off'));
+    row('Connection',  `<span id="conn-val">${conn.effectiveType?.toUpperCase() || '—'} ${conn.downlink != null ? badge(conn.downlink + ' Mbps') : ''}</span>`, null, false, 'Stable enough for your 4K cat videos?');
+    row('Round-trip',  `<span id="rtt-val">${conn.rtt != null ? conn.rtt + ' ms' : 'N/A'}</span>`, null, false, 'Faster than your group chat replies?');
+    row('Save Data',   conn.saveData ? badge('On', 'warn') : badge('Off'), null, false, 'Data saver on = you cheap or just broke?');
     conn.addEventListener('change', () => {
       const c = document.getElementById('conn-val');
       const r = document.getElementById('rtt-val');
@@ -520,35 +586,52 @@
 
   // Browser
   section('Browser');
-  row('Browser',      `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`);
-  row('OS',           getOS(ua));
-  row('Device',       getDevice(ua));
-  row('Platform',     platformStr);
-  row('Language',     navigator.language || 'Unknown');
-  row('Languages',    (navigator.languages || [navigator.language]).join(', '));
-  row('Cookies',      navigator.cookieEnabled ? badge('Enabled') : badge('Disabled', 'off'));
-  row('Do Not Track', navigator.doNotTrack === '1' ? badge('On') : badge('Off'));
-  row('Online',       navigator.onLine ? badge('Yes') : badge('No', 'warn'));
+  let browserHTML = `${browserName} ${browserVer ? badge('v' + browserVer) : ''}`;
+  let browserWitty = browserName === 'Chrome' ? 'Google’s favorite data vacuum cleaner 🧹' :
+                     browserName === 'Firefox' ? 'Privacy champion (lol, we both know it’s a lie)' :
+                     browserName === 'Safari' ? 'Apple cult member detected' :
+                     browserName === 'Edge' ? 'Microsoft’s “we swear we’re not IE”' : 'Mysterious hipster browser';
+  row('Browser', browserHTML, null, false, browserWitty);
+
+  let os = getOS(ua);
+  let osWitty = os.includes('Windows') ? 'Still rocking Windows in 2026? Legend.' :
+                os.includes('macOS') ? 'Expensive fruit logo enjoyer' :
+                os.includes('Android') ? 'Google’s pocket spy device' :
+                os.includes('iOS') ? 'Locked in the Apple jail' :
+                os.includes('Linux') ? 'Arch btw? (we know you are)' : 'Unknown species';
+  row('OS', os, null, false, osWitty);
+
+  row('Device', getDevice(ua), null, false, 'The device currently selling your soul to advertisers');
+  row('Platform', platformStr, null, false, 'The OS that secretly judges you');
+  row('Language', navigator.language || 'Unknown', null, false, 'The language you use to argue with strangers online');
+  row('Languages', (navigator.languages || [navigator.language]).join(', '), null, false, 'All the languages you pretend to speak');
+  row('Cookies', navigator.cookieEnabled ? badge('Enabled') : badge('Disabled', 'off'), null, false, 'Cookies = delicious tracking crumbs');
+  row('Do Not Track', navigator.doNotTrack === '1' ? badge('On') : badge('Off'), null, false, navigator.doNotTrack === '1' ? 'DNT enabled… but nobody cares' : 'You gave up on privacy years ago');
+  row('Online', navigator.onLine ? badge('Yes') : badge('No', 'warn'), null, false, navigator.onLine ? 'Online and chronically online' : 'Offline? Finally touching grass?');
 
   // Hardware
   section('Hardware');
-  row('CPU Cores',     navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} logical cores` : 'Unknown');
-  row('Device Memory', navigator.deviceMemory        ? `≈ ${navigator.deviceMemory} GB` : 'N/A');
-  row('Touch Points',  navigator.maxTouchPoints > 0  ? `${navigator.maxTouchPoints} points` : badge('None'));
-  row('GPU',           gpu || `<span style="color:var(--muted);font-style:italic">Not exposed / blocked</span>`);
-  row('Battery',       '<span class="loading" id="bat-val">Checking…</span>');
+  const cores = navigator.hardwareConcurrency || 0;
+  let coresWitty = cores > 12 ? 'Beefy rig for 500 tabs and regret' :
+                   cores > 6 ? 'Decent gamer PC energy' : 'Potato PC detected';
+  row('CPU Cores', navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} logical cores` : 'Unknown', null, false, coresWitty);
+
+  row('Device Memory', navigator.deviceMemory ? `≈ ${navigator.deviceMemory} GB` : 'N/A', null, false, 'Enough RAM to remember your search history');
+  row('Touch Points', navigator.maxTouchPoints > 0 ? `${navigator.maxTouchPoints} points` : badge('None'), null, false, 'Touchy feely device');
+  row('GPU', gpu || `<span style="color:var(--muted);font-style:italic">Not exposed / blocked</span>`, null, false, gpu ? 'GPU: Rendering your bad decisions in 4K' : 'GPU hidden like your browser history');
+  row('Battery', '<span class="loading" id="bat-val">Checking your life force…</span>', null, false);
 
   // Display
   section('Display');
-  row('Screen',      `${screen.width} × ${screen.height} px &nbsp;${badge(window.devicePixelRatio + 'x DPR')}`);
-  row('Viewport',    `<span id="viewport-val">${window.innerWidth} × ${window.innerHeight} px</span> <span style="font-size:0.63rem;color:var(--muted)">(live)</span>`);
-  row('Colour Depth', screen.colorDepth + '-bit');
-  row('Orientation',  screen.orientation?.type || 'N/A');
+  row('Screen', `${screen.width} × ${screen.height} px &nbsp;${badge(window.devicePixelRatio + 'x DPR')}`, null, false, 'High enough res to zoom in on your mistakes');
+  row('Viewport', `<span id="viewport-val">${window.innerWidth} × ${window.innerHeight} px</span> <span style="font-size:0.65rem;color:var(--muted)">(live, like your anxiety)</span>`, null, false);
+  row('Colour Depth', screen.colorDepth + '-bit', null, false, 'Enough colors to see 50 shades of your depression');
+  row('Orientation', screen.orientation?.type || 'N/A', null, false, 'Portrait = boring. Landscape = chaotic good');
 
   // System
   section('System');
-  row('Timezone',   Intl.DateTimeFormat().resolvedOptions().timeZone);
-  row('User Agent', `<span style="font-size:0.7rem;color:#9090a8;line-height:1.65">${ua}</span>`);
+  row('Timezone', Intl.DateTimeFormat().resolvedOptions().timeZone, null, false, 'The reason you’re always late to everything');
+  row('User Agent', `<span style="font-size:0.72rem;color:#9090a8;line-height:1.7">${ua}</span>`, null, false, 'The string that doxxes you since 1995');
 
   // ── Live viewport update ───────────────────────────────────
   const vpEl = document.getElementById('viewport-val');
@@ -557,16 +640,19 @@
     vpEl.textContent = `${window.innerWidth} × ${window.innerHeight} px`;
     vpEl.classList.add('flash');
     clearTimeout(vpTimer);
-    vpTimer = setTimeout(() => vpEl.classList.remove('flash'), 600);
+    vpTimer = setTimeout(() => vpEl.classList.remove('flash'), 800);
   });
 
-  // ── Battery ───────────────────────────────────────────────
+  // ── Battery with extra roast ───────────────────────────────────────────────
   const batEl = document.getElementById('bat-val');
   if (navigator.getBattery) {
     navigator.getBattery().then(b => {
       function renderBat(bat) {
         const pct = Math.round(bat.level * 100);
         const color = pct < 20 ? '#ff5f57' : pct < 50 ? '#febc2e' : '#00ffa3';
+        let wittyBat = bat.charging ? 'Charging — finally some self-care' :
+                       pct < 25 ? 'Battery dying faster than your motivation' :
+                       pct < 50 ? 'Half dead, like your social life' : 'Battery healthier than your sleep schedule';
         batEl.classList.remove('loading');
         batEl.innerHTML = `
           ${pct}%&nbsp;${bat.charging ? badge('⚡ Charging') : ''}
@@ -574,43 +660,40 @@
             <span class="bat-bar">
               <span class="bat-fill" style="width:${pct}%;background:${color}"></span>
             </span>
-          </span>`;
+          </span>
+          <span class="witty-comment">${wittyBat}</span>`;
       }
       renderBat(b);
-      b.addEventListener('levelchange',    () => renderBat(b));
+      b.addEventListener('levelchange', () => renderBat(b));
       b.addEventListener('chargingchange', () => renderBat(b));
     }).catch(() => {
-      batEl.textContent = 'N/A';
+      batEl.innerHTML = 'N/A <span class="witty-comment">Battery API blocked — paranoid king</span>';
       batEl.classList.remove('loading');
     });
   } else {
-    batEl.textContent = 'Not supported';
+    batEl.innerHTML = 'Not supported <span class="witty-comment">Ancient device detected</span>';
     batEl.classList.remove('loading');
   }
 
-  // ── IP + Geolocation ──────────────────────────────────────
+  // ── IP + Geolocation with extra spice ──────────────────────────────────────
   const ipEl  = document.getElementById('ip-val');
   const geoEl = document.getElementById('geo-val');
   const ispEl = document.getElementById('isp-val');
 
-  // Normalise different API response shapes into one object
   function normalise(data) {
     if (!data) return null;
-    const ip      = data.ip      || data.query            || null;
-    const city    = data.city                              || '';
-    const region  = data.region  || data.region_name      || '';
-    const country = data.country || data.country_name     || '';
-    const cc      = data.country_code || data.country_code2
-                 || data.countryCode  || '';
-    const isp     = data.org     || data.isp
-                 || data.connection?.org
-                 || data.as       || '';
+    const ip      = data.ip || data.query || null;
+    const city    = data.city || '';
+    const region  = data.region || data.region_name || '';
+    const country = data.country || data.country_name || '';
+    const cc      = data.country_code || data.countryCode || data.country_code2 || '';
+    const isp     = data.org || data.isp || data.connection?.org || data.as || '';
     return ip ? { ip, city, region, country, cc, isp } : null;
   }
 
-  async function tryFetch(url, timeout = 5000) {
+  async function tryFetch(url, timeout = 4500) {
     const ctrl = new AbortController();
-    const tid  = setTimeout(() => ctrl.abort(), timeout);
+    const tid = setTimeout(() => ctrl.abort(), timeout);
     try {
       const res = await fetch(url, { signal: ctrl.signal });
       clearTimeout(tid);
@@ -624,10 +707,12 @@
 
   async function fetchIPData() {
     [ipEl, geoEl, ispEl].forEach(el => {
-      if (el) { el.textContent = 'Fetching…'; el.className = 'info-value loading'; }
+      if (el) {
+        el.textContent = 'Summoning your location...';
+        el.className = 'info-value loading';
+      }
     });
 
-    // Full geo endpoints (tried in order, first success wins)
     const geoEndpoints = [
       'https://ipwho.is/',
       'https://ipapi.co/json/',
@@ -642,18 +727,14 @@
       if (info) break;
     }
 
-    // Last resort: get at least the raw IP from ipify
     if (!info) {
       const raw = await tryFetch('https://api.ipify.org?format=json');
-      if (raw?.ip) {
-        info = { ip: raw.ip, city: '', region: '', country: '', cc: '', isp: '' };
-      }
+      if (raw?.ip) info = { ip: raw.ip, city: '', region: '', country: '', cc: '', isp: '' };
     }
 
     if (!info) {
-      ipEl.textContent = 'Unavailable';
-      ipEl.className   = 'info-value';
-      [geoEl, ispEl].forEach(el => { if (el) { el.textContent = '—'; el.className = 'info-value'; } });
+      ipEl.innerHTML = 'Unavailable <span class="witty-comment">You broke the internet</span>';
+      [geoEl, ispEl].forEach(el => el && (el.innerHTML = '— <span class="witty-comment">Nice try</span>'));
       return;
     }
 
@@ -661,36 +742,40 @@
       ? String.fromCodePoint(...[...info.cc.toUpperCase()].map(c => 0x1F1E0 + c.charCodeAt(0) - 65))
       : '';
 
-    ipEl.textContent = info.ip;
-    ipEl.className   = 'info-value';
+    ipEl.innerHTML = `${info.ip}<span class="witty-comment">The number that betrays you to every ad company</span>`;
+    ipEl.className = 'info-value';
 
     const locParts = [info.city, info.region, info.country].filter(Boolean);
-    geoEl.innerHTML  = `${flag ? flag + '\u2002' : ''}${locParts.length ? locParts.join(', ') : '—'}`;
-    geoEl.className  = 'info-value';
+    const locationText = locParts.length ? locParts.join(', ') : 'Nowhere (congrats)';
+    geoEl.innerHTML = `${flag ? flag + '\u2002' : ''}${locationText}<span class="witty-comment">Home sweet home... or your mom’s basement?</span>`;
+    geoEl.className = 'info-value';
 
-    ispEl.textContent = info.isp || '—';
-    ispEl.className   = 'info-value';
+    ispEl.innerHTML = `${info.isp || 'Unknown'}<span class="witty-comment">Your ISP knows what you did last night</span>`;
+    ispEl.className = 'info-value';
   }
 
   fetchIPData();
 
+  // Refresh buttons
   document.getElementById('refresh-ip-btn').addEventListener('click', fetchIPData);
-  document.getElementById('row-refresh-btn')?.addEventListener('click', fetchIPData);
+  const rowRefresh = document.getElementById('row-refresh-btn');
+  if (rowRefresh) rowRefresh.addEventListener('click', fetchIPData);
 
   // ── Copy Report ───────────────────────────────────────────
   function buildReport() {
-    let out = '=== Who Are You? — System Fingerprint ===\n';
+    let out = '=== Who The Hell Are You? — Full Digital Exposure ===\n\n';
     document.querySelectorAll('.section-divider, .info-item').forEach(el => {
       if (el.classList.contains('section-divider')) {
         out += `\n── ${el.querySelector('span').textContent.trim()} ──\n`;
       } else {
         const label = el.querySelector('.info-label').textContent.trim();
-        const value = el.querySelector('.info-value').textContent.trim().replace(/\s+/g, ' ');
+        const valueEl = el.querySelector('.info-value');
+        const value = valueEl ? valueEl.textContent.trim().replace(/\s+/g, ' ') : '';
         out += `${label.padEnd(22)}: ${value}\n`;
       }
     });
-    out += `\nGenerated : ${new Date().toLocaleString()}\n`;
-    out += 'Note      : Local data only — IP via ipwho.is, nothing stored.\n';
+    out += `\nGenerated : ${new Date().toLocaleString('en-US', { timeZoneName: 'short' })}`;
+    out += '\nNote      : You are not special. Everyone gets roasted the same way.';
     return out;
   }
 
@@ -700,27 +785,66 @@
     try {
       await navigator.clipboard.writeText(report);
       const orig = btn.innerHTML;
-      btn.innerHTML = '✅ Copied!';
-      setTimeout(() => btn.innerHTML = orig, 2200);
+      btn.innerHTML = '✅ COPIED TO CLIPBOARD (you monster)';
+      setTimeout(() => btn.innerHTML = orig, 2400);
     } catch {
-      // Clipboard API unavailable — show modal fallback
       document.getElementById('modal-text').value = report;
       document.getElementById('modal-overlay').classList.add('open');
     }
   });
 
-  document.getElementById('modal-close').addEventListener('click',
-    () => document.getElementById('modal-overlay').classList.remove('open'));
-
+  document.getElementById('modal-close').addEventListener('click', () => {
+    document.getElementById('modal-overlay').classList.remove('open');
+  });
   document.getElementById('modal-select').addEventListener('click', () => {
     const ta = document.getElementById('modal-text');
-    ta.select(); ta.setSelectionRange(0, 99999);
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+  });
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target.id === 'modal-overlay') document.getElementById('modal-overlay').classList.remove('open');
   });
 
-  document.getElementById('modal-overlay').addEventListener('click', e => {
-    if (e.target.id === 'modal-overlay')
-      document.getElementById('modal-overlay').classList.remove('open');
+  // ── EPIC ROAST MODAL ─────────────────────────────────────────────
+  const roastModal = document.getElementById('roast-modal');
+  const roastContent = document.getElementById('roast-content');
+
+  function generateRoast() {
+    const roasts = [
+      `Your browser is ${browserName}. Bold choice. Most people just accept they’re being watched.`,
+      `Running ${os} in 2026? Respect. Or poor life choices. Hard to tell.`,
+      `You have ${cores} CPU cores. Still not enough to handle your tab addiction.`,
+      `GPU: ${gpu ? 'Visible' : 'Hidden'}. Either way, it’s judging you.`,
+      `Battery at whatever % it is right now — still healthier than your sleep schedule.`,
+      `Your timezone is ${Intl.DateTimeFormat().resolvedOptions().timeZone}. The only thing keeping you from being on time.`,
+      `IP located in ${geoEl ? geoEl.textContent.replace(/<[^>]+>/g, '') : 'somewhere'}. Your parents are proud.`,
+      `Connection type: ${conn ? conn.effectiveType || 'unknown' : 'mystery'}. Good enough for TikTok, not for dignity.`,
+      `You are 100% unique… just like the other 8 billion people who opened this page today.`,
+      `Final diagnosis: You are terminally online. There is no cure.`
+    ];
+    return roasts.map(r => `• ${r}`).join('<br><br>');
+  }
+
+  document.getElementById('roast-btn').addEventListener('click', () => {
+    roastContent.innerHTML = generateRoast();
+    roastModal.classList.add('open');
   });
+
+  document.getElementById('roast-close').addEventListener('click', () => roastModal.classList.remove('open'));
+  document.getElementById('roast-again').addEventListener('click', () => {
+    roastContent.style.opacity = '0';
+    setTimeout(() => {
+      roastContent.innerHTML = generateRoast();
+      roastContent.style.transition = 'opacity 0.4s';
+      roastContent.style.opacity = '1';
+    }, 200);
+  });
+
+  roastModal.addEventListener('click', e => {
+    if (e.target.id === 'roast-modal') roastModal.classList.remove('open');
+  });
+
+  console.log('%c😂 You just got fingerprinted AND roasted. You’re welcome.', 'color:#00ffa3; font-family:monospace; font-size:10px;');
 </script>
 </body>
 </html>
